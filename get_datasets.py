@@ -16,7 +16,7 @@ def download_data(year_before, df):
         pbar = tqdm(total=df.shape[0])
         for isin in df["Code ISIN"]:
             pbar.update(1)
-            hist = yf.Ticker(isin + ".PA").history(period="max", interval="1d", debug=False)
+            hist = yf.Ticker(isin + ".PA").history(period="max", debug=False)
             if list(hist.index) != []:
                 if int(str(hist.index[0])[:4]) <= year_before:
                     pbar.set_description("Isin code %s" % isin)
