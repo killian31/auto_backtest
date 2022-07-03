@@ -18,13 +18,13 @@ def find_extreme_dates(directory):
 def momentum(old, actual):
     return 100*(actual - old)/old
 
-def time_momentum(months, date):
-    pass
+def time_momentum(months, date, df):
+    old_value = df.iloc[date - months]
 
 
 def main(datadir):
     extremum_dates = find_extreme_dates(datadir)
-    print(f"Les historiques de données récupérés sont entre {extremum_dates[0]} et {extremum_dates[1]}.")
+    print(f"Les données récupérées sont entre {extremum_dates[0]} et {extremum_dates[1]}.")
 
 if __name__ == '__main__':
     print(find_extreme_dates("Data"))
