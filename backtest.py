@@ -1,30 +1,30 @@
 import pandas as pd
-import yfinance as yf
-from tqdm import tqdm
+import os
+from datetime import datetime
+from dateutil import parser
+from get_datasets import load_dictionary
+from get_datasets import download_data
 
-def load_data(file):
-    df = pd.read_csv(file)
-    df_update = df.dropna(axis=0)
-    print("Got", df_update.shape[0], "funds out of", df.shape[0])
-    return df_update
+exemple_data = pd.read_csv("Data/FR0000003188.csv", index_col='Date')
 
-def get_missing_funds(df):
-    return [isin for isin in df[df["Yahoo query"].isna()]["Code ISIN"]]
+def find_extreme_dates(directory):
+    dates_list = []
+    for filename in os.listdir(directory):
+        with open(os.path.join("Data", filename), 'r') as datafile:
+            date = parser.parse(datafile.readlines()[1][:10])
+            dates_list.append(date)
+    return str(min(dates_list))[:10], str(max(dates_list))[:10]
 
-def compute_momentum(date, months, data):
+def momentum(old, actual):
+    return 100*(actual - old)/old
+
+def time_momentum(months, date):
     pass
-    
 
 
-if __name__ == "__main__":
-    df = load_data("dictionnary_isin_yahoo.csv")
-    test_query = "LU0568621618"
+def main(datadir):
+    extremum_dates = find_extreme_dates(datadir)
+    print(f"Les historiques de données récupérés sont entre {extremum_dates[0]} et {extremum_dates[1]}.")
 
-    data = {}
-    def test():
-        for isin in tqdm(df["Code ISIN"]):
-            print(isin)
-            assert(str(yf.Ticker(isin).history(period="max").iloc[0,].name)[:10] == "2018-01-02")
-        
-    print(type(yf.Ticker(test_query).history(period="max")))
-    #test()
+if __name__ == '__main__':
+    print(find_extreme_dates("Data"))
