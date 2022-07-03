@@ -1,10 +1,12 @@
 import pandas as pd
 import os
 from datetime import datetime
+import time
 from dateutil import parser
 from dateutil import relativedelta
 from get_datasets import load_dictionary
 from get_datasets import download_data
+import yfinance as yf
 
 exemple_data = pd.read_csv("Data/FR0000003188.csv", parse_dates=['Date'], index_col=['Date'])
 
@@ -36,3 +38,9 @@ def main(datadir):
 
 if __name__ == '__main__':
     print(time_momentum(1, parser.parse(find_extreme_dates("Data")[1]), exemple_data))
+    for isin in pd.read_csv("dictionnary_isin_yahoo.csv")["Code ISIN"]:
+        hist = yf.Ticker(isin).history(period="max", debug=False)
+        if list(hist.index) != []:
+            print(int(str(hist.index[len(hist.index)-1])[:4]))
+            if int(str(hist.index[len(hist.index)-1])[:4]) == 2022:
+                print(isin)
